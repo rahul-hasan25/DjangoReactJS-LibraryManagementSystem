@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET','POST'])
@@ -32,7 +33,7 @@ def admin_login_api(request):
 
 
 
-# Category
+# Book Category
 @api_view(['POST','GET'])
 def add_category(request):
     if request.method == 'POST':
@@ -51,8 +52,8 @@ def add_category(request):
         
         return Response(
             {
-                'success': True,
-                'message': 'Category has been created!',
+                'success' : True,
+                'message' : 'Category has been created!',
                 'category': serializer.data,
             }, status = status.HTTP_201_CREATED)
         
@@ -63,3 +64,38 @@ def list_categories(request):
     serializer = CategorySerializer(categories, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+def update_category(request, id):
+    category        = get_object_or_404(Category, id=id)
+    name            = request.data.get('name')
+    category_status = request.data.get('status')
+    
+    is_active  = True if str(category_status) == '1' else False
+    
+    category.name      = name
+    category.is_active = is_active
+    category.save()
+    
+    serializer = CategorySerializer(category)
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Category has been Updated!',
+            'category': serializer.data,
+        }, status = status.HTTP_200_OK)
+    
+
+
+@api_view(['DELETE'])
+def delete_category(request, id):
+    category = get_object_or_404(Category, id=id)
+    category.delete()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Category delete successfully!',
+        }, status = status.HTTP_200_OK)

@@ -65,84 +65,84 @@ const AddCategory = () => {
                         </h4>
                         <p className='text-muted small'>Create new Book Category and manage their active status</p>
                     </div>
+                </div>
+            </div>
 
-                    <div className='row g-4'>
-                        <div className='col-md-5'>
-                            <div className='card border-0 shadow-sm rounded-4'>
-                                <div className='card-body p-4'>
-                                    <form onSubmit={handleSubmit} >
-                                        <div className='mb-3'>
-                                            <label className='form-label small fw-medium'>Category Name</label>
-                                            <input type="text" className='form-control' placeholder='e.g Programming, Science, Novel' required value={name} onChange={(e)=> setName(e.target.value)} />
-                                        </div>
-
-                                        <div className='mb-3'>
-                                            <label className='form-label small fw-medium'>Status</label>
-                                            <div className='d-flex gap-3'>
-                                                <div className='form-check'>
-                                                    <input type="radio" className='form-check-input' value='1' checked={status==='1'} onChange={(e)=> setStatus(e.target.value)} id='status-active' name='status' />
-                                                    <label className='form-check-label small' htmlFor="status-active">Active</label>
-                                                </div>
-
-                                                <div className='form-check'>
-                                                    <input type="radio" className='form-check-input' value='0' checked={status==='0'} onChange={(e)=> setStatus(e.target.value)} id='status-inactive' name='status' />
-                                                    <label className='form-check-label small' htmlFor="status-inactive">Inactive</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type='submit' className='btn btn-primary w-100' disabled={loading}>
-                                            { loading ? (<> <span className='spinner-border spinner-border-sm me-2'></span> Creating... </>)
-                                            :
-                                            (<> <i className='fa-solid fa-plus'></i> Create Category </>)
-                                            }
-                                        </button>
-                                    </form>
+            <div className='row g-4'>
+                <div className='col-md-5'>
+                    <div className='card border-0 shadow-sm rounded-4'>
+                        <div className='card-body p-4'>
+                            <form onSubmit={handleSubmit} >
+                                <div className='mb-3'>
+                                    <label className='form-label small fw-medium'>Category Name</label>
+                                    <input type="text" className='form-control' placeholder='e.g Programming, Science, Novel' required value={name} onChange={(e)=> setName(e.target.value)} />
                                 </div>
-                            </div>
+
+                                <div className='mb-3'>
+                                    <label className='form-label small fw-medium'>Status</label>
+                                    <div className='d-flex gap-3'>
+                                        <div className='form-check'>
+                                            <input type="radio" className='form-check-input' value='1' checked={status==='1'} onChange={(e)=> setStatus(e.target.value)} id='status-active' name='status' />
+                                            <label className='form-check-label small' htmlFor="status-active">Active</label>
+                                        </div>
+
+                                        <div className='form-check'>
+                                            <input type="radio" className='form-check-input' value='0' checked={status==='0'} onChange={(e)=> setStatus(e.target.value)} id='status-inactive' name='status' />
+                                            <label className='form-check-label small' htmlFor="status-inactive">Inactive</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type='submit' className='btn btn-primary w-100' disabled={loading}>
+                                    { loading ? (<> <span className='spinner-border spinner-border-sm me-2'></span> Creating... </>)
+                                    :
+                                    (<> <i className='fa-solid fa-plus'></i> Create Category </>)
+                                    }
+                                </button>
+                            </form>
                         </div>
+                    </div>
+                </div>
 
-                        <div className='col-md-7'>
-                            <div className='card border-0 shadow-sm rounded-4'>
-                                <div className='card-body p-4'>
-                                    <h6 className="fw-semibold mb-3">Existing Categories</h6>
-                                    { categories.length === 0 ? (<p className="text-muted small">No categories found. Add your first category.</p>)
-                                    : (
-                                        <div className="table-responsive">
-                                            <table className='table'>
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Name</th>
-                                                        <th>Status</th>
-                                                        <th>Created</th>
-                                                    </tr>
-                                                </thead>
+                <div className='col-md-7'>
+                    <div className='card border-0 shadow-sm rounded-4'>
+                        <div className='card-body p-4'>
+                            <h6 className="fw-semibold mb-3">Existing Categories</h6>
+                            { categories.length === 0 ? (<p className="text-muted small">No categories found. Add your first category.</p>)
+                            : (
+                                <div className="table-responsive">
+                                    <table className='table'>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Created</th>
+                                            </tr>
+                                        </thead>
 
-                                                <tbody>
-                                                    {categories.map((cat,index) => (
-                                                        <tr key={cat.id}>
-                                                            <td>{index+1}</td>
-                                                            <td> {cat.name} </td>
-                                                            <td>
-                                                                { cat.is_active ? 
-                                                                (
-                                                                    <span className='badge bg-success-subtle text-success border border-success-subtle'>Active</span>
-                                                                ) 
-                                                                :                                                                
-                                                                (
-                                                                    <span className='badge bg-secondary-subtle text-secondary border border-secondary-subtle'>Inactive</span>
-                                                                )}
-                                                            </td>
-                                                            <td>{new Date(cat.created_at).toLocaleDateString()}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
+                                        <tbody>
+                                            {categories.map((cat,index) => (
+                                                <tr key={cat.id}>
+                                                    <td>{index+1}</td>
+                                                    <td> {cat.name} </td>
+                                                    <td>
+                                                        { cat.is_active ? 
+                                                        (
+                                                            <span className='badge bg-success-subtle text-success border border-success-subtle'>Active</span>
+                                                        ) 
+                                                        :                                                                
+                                                        (
+                                                            <span className='badge bg-secondary-subtle text-secondary border border-secondary-subtle'>Inactive</span>
+                                                        )}
+                                                    </td>
+                                                    <td>{new Date(cat.created_at).toLocaleDateString()}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>

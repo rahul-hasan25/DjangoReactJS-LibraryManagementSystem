@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify'
 import "react-toastify/ReactToastify.css"
 import AdminDashboard from './pages/AdminDashboard'
 import AddCategory from './pages/AddCategory'
+import ManageCategories from './pages/ManageCategories'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route path='/admin/login' element={<AdminLogin/>} />
         <Route path='/admin/dashboard' element={<AdminDashboard />} />
         <Route path='/admin/category_add' element={<AddCategory />} />
+        <Route path='/admin/category_manage' element={<ManageCategories />} />
       </Routes>
     </>
   )
