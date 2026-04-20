@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom"
 const AdminLogin = () => {
     const [username,setUserName] = useState("");
     const [password,setPassword] = useState("");
+    const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const res = await axios.post("http://127.0.0.1:8000/api/admin/login/", {username,password});
@@ -29,6 +31,9 @@ const AdminLogin = () => {
             } else {
                 toast.error("Invalid Credentials");
             }
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -67,7 +72,12 @@ const AdminLogin = () => {
                                     </div>
                                 </div>
 
-                                <button type='submit' className='btn btn-primary w-100'><i className='fa-solid fa-right-to-bracket'></i> Sign In</button>
+                                <button type='submit' className='btn btn-primary w-100' disabled={loading}>
+                                    { loading ? (<> <span className='spinner-border spinner-border-sm me-2'></span> Signing In...... </>)
+                                    :
+                                    (<> <i className='fa-solid fa-right-to-bracket'></i> Sign In </>)
+                                    }
+                                </button>
                             </form>
                         </div>
                     </div>
