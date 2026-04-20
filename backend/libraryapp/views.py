@@ -34,7 +34,7 @@ def admin_login_api(request):
 
 
 # Book Category
-@api_view(['POST','GET'])
+@api_view(['POST'])
 def add_category(request):
     if request.method == 'POST':
         name            = request.data.get('name')
@@ -97,5 +97,63 @@ def delete_category(request, id):
     return Response(
         {
             'success' : True,
-            'message' : 'Category delete successfully!',
+            'message' : 'Category deleted successfully!',
+        }, status = status.HTTP_200_OK)
+    
+    
+
+# <---------AUTHOR-------->
+@api_view(['POST'])
+def add_author(request):
+    name   = request.data.get('name')
+    
+    author     = Author.objects.create(name=name)
+    serializer = AuthorSerializer(author)
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Author has been created!',
+            'author'  : serializer.data,
+        }, status = status.HTTP_201_CREATED)
+    
+
+
+@api_view(['GET'])
+def list_authors(request):
+    authors    = Author.objects.all()
+    serializer = AuthorSerializer(authors, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PUT'])
+def update_author(request, id):
+    author = get_object_or_404(Author, id=id)
+    name   = request.data.get('name')
+    
+    author.name = name
+    author.save()
+    
+    serializer = AuthorSerializer(author)
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Author has been Updated!',
+            'category': serializer.data,
+        }, status = status.HTTP_200_OK)
+
+
+
+@api_view(['DELETE'])
+def delete_author(request, id):
+    author = get_object_or_404(Author, id=id)
+    author.delete()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Author deleted successfully!',
         }, status = status.HTTP_200_OK)

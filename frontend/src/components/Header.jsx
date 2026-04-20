@@ -79,7 +79,7 @@ const Header = () => {
                             </button>
                             <ul className='dropdown-menu dropdown-menu-end'>
                                 <li>
-                                    <Link className="dropdown-item" to="/admin/category_add"><i className='fa-solid fa-plus me-1'></i>Add Author</Link>
+                                    <Link className="dropdown-item" to="/admin/author_add"><i className='fa-solid fa-plus me-1'></i>Add Author</Link>
                                 </li>
 
                                 <li>
