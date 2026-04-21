@@ -8,6 +8,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import AddCategory from './pages/AddCategory'
 import ManageCategories from './pages/ManageCategories'
 import AddAuthor from './pages/AddAuthor'
+import ManageAuthors from './pages/ManageAuthors'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='/admin/category_add' element={<AddCategory />} />
         <Route path='/admin/category_manage' element={<ManageCategories />} />
         <Route path='/admin/author_add' element={<AddAuthor/>} />
+        <Route path='/admin/author_manage' element={<ManageAuthors/>} />
       </Routes>
     </>
   )
