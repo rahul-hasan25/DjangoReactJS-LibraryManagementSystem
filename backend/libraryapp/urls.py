@@ -15,4 +15,7 @@ urlpatterns = [
     path('api/authors/', list_authors),
     path('api/update_author/<int:id>/', update_author),
     path('api/delete_author/<int:id>/', delete_author),
+    #ADMIN Book
+    path('api/books/add/', add_book),
+    path('api/books/', list_books),
 ]

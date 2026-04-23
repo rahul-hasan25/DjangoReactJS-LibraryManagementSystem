@@ -3,10 +3,13 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 
-const ManageAuthors = () => {
+const ManageBooks = () => {
+    const [books,setBooks] = useState([]);
+    const [categories,setCategories] = useState([]);
+    const [authors,setAuthors] = useState([]);
     const [editId,setEditId] = useState(null);
     const [editName,setEditName] = useState("");
-    const [authors,setAuthors] = useState([]);
+
     const [loadingList,setLoadingList] = useState(false);
     const [saving,setSaving] = useState(false);
     const navigate = useNavigate();
@@ -16,15 +19,21 @@ const ManageAuthors = () => {
         if(!adminUser){
             navigate('/admin/login');
         } else {
-            fetchAuthors();
+            fetchAll();
         }
     }, []);
 
-    const fetchAuthors = async()=> {
+    const fetchAll = async()=> {
         setLoadingList(true);
         try {
-            const res = await axios.get("http://127.0.0.1:8000/api/authors/");
-            setAuthors(res.data);
+            const [booksRes, categoriesRes, authorsRes] = await Promise.all([
+                axios.get("http://127.0.0.1:8000/api/books/"),
+                axios.get("http://127.0.0.1:8000/api/categories/"),
+                axios.get("http://127.0.0.1:8000/api/authors/"),
+            ]);
+            setBooks(booksRes.data);
+            setCategories(categoriesRes.data)
+            setAuthors(authorsRes.data);
         }
         catch(err) {
             console.error(err);
@@ -57,7 +66,7 @@ const ManageAuthors = () => {
             if (res.data.success){
                 toast.success(res.data.message || "Author Updated!")
                 cancelEdit();
-                fetchAuthors();
+                fetchAll();
             }
             else {
                 toast.error(res.data.message || "Update Failed")
@@ -92,7 +101,6 @@ const ManageAuthors = () => {
             toast.error("Something went wrong");
         }
     }
-
   return (
     <div className="py-5" style={{background:'linear-gradient(135deg, #f3f4ff, #fdfbff)', minHeight:'100vh'}}>
         <div className='container'>
@@ -100,9 +108,9 @@ const ManageAuthors = () => {
                 <div className='col-md-8 mx-auto'>
                     <div className='mb-4 text-center'>
                         <h4 className='fw-semibold mb-1'>
-                            <i className='fa-solid fa-layer-group text-primary'></i> Manage Authors
+                            <i className='fa-solid fa-book text-primary'></i> Manage Books
                         </h4>
-                        <p className='text-muted small'>View, Edit and Delete Authors from the library system.</p>
+                        <p className='text-muted small'>View, Edit and Delete Books from the library system.</p>
                     </div>
                 </div>
             </div>
@@ -137,38 +145,49 @@ const ManageAuthors = () => {
                     <div className='card border-0 shadow-sm rounded-4'>
                         <div className='card-body p-4'>
                             <div className='d-flex justify-content-between align-items-center'>
-                                <h6 className="fw-semibold mb-3">Authors Listing</h6>
-                                <button onClick={()=>navigate("/admin/author_add")} className='btn btn-outline-primary btn-sm'><i className='fa-solid fa-plus me-1'></i> Add New</button>
+                                <h6 className="fw-semibold mb-3">Books Listing</h6>
+                                <button onClick={()=>navigate("/admin/book_add")} className='btn btn-outline-primary btn-sm'><i className='fa-solid fa-plus me-1'></i> Add New</button>
                             </div>
 
                             { loadingList ? (
                                 <div className='text-center py-4'>
                                     <div className='spinner-border text-primary'></div>
                                 </div>
-                            ) : authors.length === 0 ? (<p className="text-muted small">No Authors found. Add your first Author.</p>)
+                            ) : books.length === 0 ? (<p className="text-muted small">No Books found. Add your first Book.</p>)
                             : (
                                 <div className="table-responsive">
                                     <table className='table table-striped table-hover align-middle'>
                                         <thead className='small text-muted'>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
-                                                <th>Created</th>
-                                                <th>Updated</th>
+                                                <th>Book</th>
+                                                <th>Category</th>
+                                                <th>Author</th>
+                                                <th>ISBN</th>
+                                                <th>Price</th>
+                                                <th>Qty</th>
                                                 <th className='text-center'>Action</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            {authors.map((author,index) => (
-                                                <tr key={author.id}>
+                                            {books.map((book,index) => (
+                                                <tr key={book.id}>
                                                     <td>{index+1}</td>
-                                                    <td> {author.name} </td>
-                                                    <td className='small text-muted'>{new Date(author.created_at).toLocaleDateString()}</td>
-                                                    <td className='small text-muted'>{new Date(author.updated_at).toLocaleDateString()}</td>
+                                                    <td style={{maxWidth:"200px"}}>
+                                                        <img src={`http://127.0.0.1:8000${book.cover_image}`} alt={book.title} className='img-fluid rounded' style={{maxWidth:"100px", height:"70px", marginBottom:"4px"}} />
+                                                        <div className='fw-bold small'>
+                                                            {book.title}
+                                                        </div>
+                                                    </td>
+                                                    <td className='small text-muted'>{book.category_name}</td>
+                                                    <td className='small text-muted'>{book.author_name}</td>
+                                                    <td className='small text-muted'>{book.isbn}</td>
+                                                    <td className='small text-muted'>{book.price}</td>
+                                                    <td className='small text-muted'>{book.quantity}</td>
                                                     <td className='text-center'>
-                                                        <button onClick={()=>startEdit(author)} className='btn btn-sm btn-outline-primary me-2'><i className='fa-solid fa-pen-to-square'></i>Edit</button>
-                                                        <button onClick={()=>handleDelete(author.id)} className='btn btn-sm btn-outline-danger'><i className='fa-solid fa-trash-can'></i>Delete</button>
+                                                        <button onClick={()=>startEdit(book)} className='btn btn-sm btn-outline-primary me-2'><i className='fa-solid fa-pen-to-square'></i>Edit</button>
+                                                        <button onClick={()=>handleDelete(book.id)} className='btn btn-sm btn-outline-danger'><i className='fa-solid fa-trash-can'></i>Delete</button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -185,4 +204,4 @@ const ManageAuthors = () => {
   )
 }
 
-export default ManageAuthors
+export default ManageBooks

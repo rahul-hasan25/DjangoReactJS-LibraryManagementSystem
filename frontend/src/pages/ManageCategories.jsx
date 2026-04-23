@@ -168,7 +168,7 @@ const ManageCategories = () => {
                             ) : categories.length === 0 ? (<p className="text-muted small">No categories found. Add your first category.</p>)
                             : (
                                 <div className="table-responsive">
-                                    <table className='table table-striped table-hover'>
+                                    <table className='table table-striped table-hover align-middle'>
                                         <thead className='small text-muted'>
                                             <tr>
                                                 <th>#</th>
@@ -197,7 +197,7 @@ const ManageCategories = () => {
                                                     </td>
                                                     <td className='small text-muted'>{new Date(cat.created_at).toLocaleDateString()}</td>
                                                     <td className='small text-muted'>{new Date(cat.updated_at).toLocaleDateString()}</td>
-                                                    <td className='text-center d-flex'>
+                                                    <td className='text-center'>
                                                         <button onClick={()=>startEdit(cat)} className='btn btn-sm btn-outline-primary me-2'><i className='fa-solid fa-pen-to-square'></i>Edit</button>
                                                         <button onClick={()=>handleDelete(cat.id)} className='btn btn-sm btn-outline-danger'><i className='fa-solid fa-trash-can'></i>Delete</button>
                                                     </td>
