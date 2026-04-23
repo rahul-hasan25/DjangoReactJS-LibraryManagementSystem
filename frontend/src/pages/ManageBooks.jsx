@@ -8,7 +8,13 @@ const ManageBooks = () => {
     const [categories,setCategories] = useState([]);
     const [authors,setAuthors] = useState([]);
     const [editId,setEditId] = useState(null);
-    const [editName,setEditName] = useState("");
+    const [editTitle,setEditTitle] = useState("");
+    const [editCategory, setEditCategory] = useState("");
+    const [editAuthor, setEditAuthor] = useState("");
+    const [editPrice, setEditPrice] = useState("");
+    const [editQuantity, setEditQuantity] = useState("");
+    const [editImageFile, setEditImageFile] = useState(null);
+    const [editImagePreview, setEditeImagePreview] = useState(null);
 
     const [loadingList,setLoadingList] = useState(false);
     const [saving,setSaving] = useState(false);
@@ -45,14 +51,34 @@ const ManageBooks = () => {
     }
 
     // # Edit Button
-    const startEdit = (author) => {
-        setEditId(author.id);
-        setEditName(author.name);
+    const startEdit = (book) => {
+        setEditId(book.id);
+        setEditTitle(book.title);
+        setEditCategory(book.category);
+        setEditAuthor(book.author);
+        setEditPrice(book.price);
+        setEditQuantity(book.quantity);
+        setEditeImagePreview(`http://127.0.0.1:8000${book.cover_image}`);
+        setEditImageFile(null);
     }
 
     const cancelEdit = (author) => {
-        setEditId();
-        setEditName('');
+        setEditId(null);
+        setEditTitle("");
+        setEditCategory("");
+        setEditAuthor("");
+        setEditPrice("");
+        setEditQuantity("");
+        setEditeImagePreview(null);
+        setEditImageFile(null);
+    }
+
+    const handleImageChange = (e)=> {
+        const file = e.target.files[0];
+        if(file){
+            setEditImageFile(file);
+            setEditeImagePreview(URL.createObjectURL(file));
+        }
     }
 
     // UPDATE Author
@@ -62,9 +88,22 @@ const ManageBooks = () => {
         setSaving(true);
 
         try {
-            const res = await axios.put(`http://127.0.0.1:8000/api/update_author/${editId}/`, {name:editName});
+            const formData = new FormData();
+            formData.append('title', editTitle);
+            formData.append('category', editCategory);
+            formData.append('author', editAuthor);
+            formData.append('price', editPrice);
+            formData.append('quantity', editQuantity);
+            if(editImageFile){
+                formData.append('cover_image', editImageFile);
+            }
+
+            const res = await axios.put(`http://127.0.0.1:8000/api/update_book/${editId}/`, formData, {
+                headers: {"Content-Type": "multipart/form-data"}
+            });
+
             if (res.data.success){
-                toast.success(res.data.message || "Author Updated!")
+                toast.success(res.data.message || "Book Updated!")
                 cancelEdit();
                 fetchAll();
             }
@@ -84,13 +123,16 @@ const ManageBooks = () => {
     // DELETE Author
 
     const handleDelete = async(id) => {
-        const ok = window.confirm("Are you sure you want to delete this Author?");
+        const ok = window.confirm("Are you sure you want to delete this Book?");
         if(!ok) return;
         try {
-            const res = await axios.delete(`http://127.0.0.1:8000/api/delete_author/${id}/`);
+            const res = await axios.delete(`http://127.0.0.1:8000/api/delete_book/${id}/`);
             if (res.data.success){
-                toast.success(res.data.message || "Author Deleted!")
-                setAuthors((prev) => prev.filter((a) => a.id !== id))
+                toast.success(res.data.message || "Book Deleted!")
+                setAuthors((prev) => prev.filter((b) => b.id !== id))
+                if(editId === id) {
+                    cancelEdit();
+                }
             }
             else {
                 toast.error(res.data.message || "Delete Failed")
@@ -119,24 +161,69 @@ const ManageBooks = () => {
                 <div className='col-md-4'>
                     <div className='card border-0 shadow-sm rounded-4'>
                         <div className='card-body p-4'>
-                            <h6 className='fw-semibold mb-3'>{ editId ? ("Edit Author") : ("Select an Author to edit") }</h6>
+                            <h6 className='fw-semibold mb-3'>{ editId ? ("Edit Book") : ("Select a Book to edit") }</h6>
                             { editId ? (
                                 <form onSubmit={handleUpdate} >
-                                    <div className='mb-3'>
-                                        <label className='form-label small fw-medium'>Author Name</label>
-                                        <input type="text" className='form-control' placeholder='e.g. Rahul Hasan' required value={editName} onChange={(e)=> setEditName(e.target.value)} />
+                                    <div className='row g-3'>
+                                        <div className='col-md-12'>
+                                            <label className='form-label small fw-medium'>Book Name</label>
+                                            <input type="text" className='form-control' value={editTitle || ""} onChange={(e) => setEditTitle(e.target.value)} placeholder='e.g. Python Programming' required />
+                                        </div>
+
+                                        <div className='col-md-12'>
+                                            <label className='form-label small fw-medium'>Category</label>
+                                            <select className='form-select' value={editCategory} onChange={(e)=>setEditCategory(e.target.value)} required>
+                                                <option value="">Select Category</option>
+                                                {categories?.map((cat)=>(
+                                                    <option value={cat.id} key={cat.id}> {cat.name} </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <div className='col-md-12'>
+                                            <label className='form-label small fw-medium'>Author</label>
+                                            <select className='form-select' value={editAuthor} onChange={(e)=>setEditAuthor(e.target.value)} required>
+                                                <option value="">Select Author</option>
+                                                {authors?.map((author)=>(
+                                                    <option value={author.id} key={author.id}> {author.name} </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <div className='col-md-6'>
+                                            <label className='form-label small fw-medium'>Price</label>
+                                            <input type="number" min='0' step='0.01' className='form-control' value={editPrice} onChange={(e) => setEditPrice(e.target.value)} placeholder='e.g. 199.99' required />
+                                        </div>
+
+                                        <div className='col-md-6'>
+                                            <label className='form-label small fw-medium'>Quantity</label>
+                                            <input type="number" min='0' step='1' className='form-control' value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} placeholder='e.g. 50' required />
+                                        </div>
+
+                                        <div className='col-md-12'>
+                                            <label className='form-label small fw-medium'>Cover Image</label>
+                                            {editImagePreview && (
+                                                <div className='mb-2'>
+                                                    <img style={{maxWidth:"100px", height:"90px", width:"auto"}} src={editImagePreview} alt="Cover Preview" className='img-fluid rounded' />
+                                                </div>
+                                            )}
+                                            <input type="file" accept='image/*' className='form-control' onChange={handleImageChange} />
+                                        </div>
                                     </div>
 
-                                    <button type='submit' className='btn btn-primary w-100' disabled={saving}>
-                                        { saving ? (<> <span className='spinner-border spinner-border-sm me-2'></span> Updating... </>)
-                                        :
-                                        (<> <i className='fa-solid fa-plus'></i> Update </>)
-                                        }
-                                    </button>
+                                    <div className='d-flex gap-2 align-items-center mt-4'>
+                                        <button type='submit' className='btn btn-primary mt-3' disabled={saving}>
+                                            { saving ? (<> <span className='spinner-border spinner-border-sm me-2'></span> Updating... </>)
+                                            :
+                                            (<> <i className='fa-solid fa-plus'></i> Update </>)
+                                            }
+                                        </button>
+                                        <button onClick={cancelEdit} type='button' className='btn btn-secondary mt-3'>Cancel</button>
+                                    </div>
                                 </form>
                             ) 
                             : 
-                            ( <p className='text-muted small'>Click on the <strong>Edit</strong> Button in the table to modify an Author.</p> )}
+                            ( <p className='text-muted small'>Click on the <strong>Edit</strong> Button in the table to modify a Author.</p> )}
                         </div>
                     </div>
                 </div>

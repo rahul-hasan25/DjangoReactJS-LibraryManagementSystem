@@ -208,3 +208,53 @@ def list_books(request):
     books      = Book.objects.all()
     serializer = BookSerializer(books, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PUT'])
+@parser_classes([MultiPartParser, FormParser])
+def update_book(request,id):
+    book = get_object_or_404(Book, id=id)
+    
+    title       = request.data.get('title')
+    author_id   = request.data.get('author')
+    category_id = request.data.get('category')
+    price       = request.data.get('price')
+    quantity    = request.data.get('quantity')
+    cover_image = request.FILES.get('cover_image')
+    
+    author   = Author.objects.get(id=author_id)
+    category = Category.objects.get(id=category_id)
+    
+    book.title    = title
+    book.author   = author
+    book.category = category
+    book.price    = price
+    book.quantity = quantity
+    
+    if cover_image:
+        book.cover_image = cover_image
+    book.save()
+    
+    serializer = BookSerializer(book)
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Book has been Updated!',
+            'book'    : serializer.data
+        }, status = status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+def delete_book(request,id):
+    book = get_object_or_404(Book, id=id)
+    book.delete()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : "Book deleted successfully!"
+        }, 
+        status = status.HTTP_200_OK
+    )

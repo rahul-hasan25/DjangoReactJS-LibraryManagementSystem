@@ -18,4 +18,6 @@ urlpatterns = [
     #ADMIN Book
     path('api/books/add/', add_book),
     path('api/books/', list_books),
+    path('api/update_book/<int:id>/', update_book),
+    path('api/delete_book/<int:id>/', delete_book),
 ]
