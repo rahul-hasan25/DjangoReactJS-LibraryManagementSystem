@@ -20,4 +20,6 @@ urlpatterns = [
     path('api/books/', list_books),
     path('api/update_book/<int:id>/', update_book),
     path('api/delete_book/<int:id>/', delete_book),
+    #Change ADMIN Password
+    path("api/change_admin_password/", admin_change_password),
 ]

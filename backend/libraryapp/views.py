@@ -6,6 +6,7 @@ from .serializers import *
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth.models import User
 
 
 @api_view(['GET','POST'])
@@ -257,4 +258,63 @@ def delete_book(request,id):
             'message' : "Book deleted successfully!"
         }, 
         status = status.HTTP_200_OK
+    )
+    
+
+
+# ADMIN Change Password
+@api_view(['POST'])
+def admin_change_password(request):
+    username         = request.data.get('username')
+    current_password = request.data.get('current_password')
+    new_password     = request.data.get('new_password')
+    confirm_password = request.data.get('confirm_password')
+    
+    if new_password != confirm_password:
+        return Response(
+            {
+                "success" : False,
+                "message" : "New password and Confirm do not match!"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    if len(new_password) < 6:
+        return Response(
+            {
+                "success" : False,
+                "message" : "New password must be at least 6 character long!"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        user = User.objects.get(username=username, is_staff=True)
+    except User.DoesNotExist:
+        return Response(
+            {
+                "success" : False,
+                "message" : "Admin User does not exist!"
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    if not user.check_password(current_password):
+        return Response(
+            {
+                "success" : False,
+                "message" : "Current Password is incorrect!"
+            },
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    user.set_password(new_password)
+    user.save()
+    
+    return Response(
+        {
+            "success" : True,
+            "message" : "Changed Password Successfully!"
+        },
+        status=status.HTTP_200_OK
     )

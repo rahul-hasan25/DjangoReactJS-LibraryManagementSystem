@@ -223,7 +223,7 @@ const ManageBooks = () => {
                                 </form>
                             ) 
                             : 
-                            ( <p className='text-muted small'>Click on the <strong>Edit</strong> Button in the table to modify a Author.</p> )}
+                            ( <p className='text-muted small'>Click on the <strong>Edit</strong> Button in the table to modify a Book.</p> )}
                         </div>
                     </div>
                 </div>

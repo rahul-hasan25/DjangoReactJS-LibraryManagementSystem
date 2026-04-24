@@ -11,6 +11,7 @@ import AddAuthor from './pages/AddAuthor'
 import ManageAuthors from './pages/ManageAuthors'
 import AddBook from './pages/AddBook'
 import ManageBooks from './pages/ManageBooks'
+import AdminChangePassword from './pages/AdminChangePassword'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
         <Route path='/admin/author_manage' element={<ManageAuthors/>} />
         <Route path='/admin/book_add' element={<AddBook/>} />
         <Route path='/admin/book_manage' element={<ManageBooks/>} />
+        <Route path='/admin/change_password' element={<AdminChangePassword/>} />
       </Routes>
     </>
   )
