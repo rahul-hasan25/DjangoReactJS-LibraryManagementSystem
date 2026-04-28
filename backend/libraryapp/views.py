@@ -7,7 +7,8 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
+from django.db.models import Q
 
 
 @api_view(['GET','POST'])
@@ -384,4 +385,54 @@ def user_signup(request):
             'full_name' : student.full_name
         },
         status=status.HTTP_201_CREATED
+    )
+    
+
+#USER Login
+@api_view(['POST'])
+def user_login(request):
+    login_id = request.data.get('login_id')
+    password = request.data.get('password')
+    
+    try:
+        if '@' in login_id:
+            student = Student.objects.get(email=login_id)
+        else:
+            student = Student.objects.get(student_id=login_id)
+    except Student.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Invalid login credentials'
+            },
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    if not check_password(password, student.password):
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Invalid login credentials'
+            },
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    if not student.is_active:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'User account is inactive. Please contact Admin'
+            },
+            status=status.HTTP_403_FORBIDDEN
+        )
+        
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Login Successful!',
+            'student_id' : student.student_id,
+            'full_name' : student.full_name,
+            'email' : student.email
+        },
+        status=status.HTTP_200_OK
     )

@@ -4,11 +4,17 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 const Header = () => {
     const location = useLocation();
     const adminUser = localStorage.getItem('adminUser');
+    const studentUser = localStorage.getItem('studentUser');
     const navigate = useNavigate();
 
     const handleLogout = ()=> {
         localStorage.removeItem('adminUser');
         navigate('/admin/login')
+    }
+
+    const handleStudentLogout = ()=> {
+        localStorage.removeItem('studentUser');
+        navigate('/user/login')
     }
 
     const isActive = (path) => {
@@ -31,8 +37,8 @@ const Header = () => {
 
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav ms-auto d-flex align-items-center">
-                    {/* Not Admin User */}
-                    { !adminUser && (
+                    {/* Not Admin User and not Student User */}
+                    { !adminUser && !studentUser && (
                         <>
                         <li className="nav-item">
                             <Link className={`nav-link d-flex align-items-center gap-1 ${isActive("/")}`} aria-current="page" to="/"><i className='fa-solid fa-home me-1'></i>Home</Link>
@@ -122,6 +128,46 @@ const Header = () => {
 
                         <li className="nav-item">
                             <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}><i className='fa-solid fa-right-from-bracket me-1'></i>Logout</button>
+                        </li>
+                        </>
+                    )}
+
+                    {/* Student User */}
+                    {studentUser && (
+                        <>
+                        <li className="nav-item">
+                            <Link className={`nav-link ${isActive("/user/dashboard")}`} to="/user/dashboard"><i className='fa-solid fa-gauge-high me-1'></i>Dashboard</Link>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link className={`nav-link ${isActive("/user/books")}`} to="/user/books"><i className='fa-solid fa-book-open me-1'></i>My Library</Link>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link className={`nav-link ${isActive("/user/issued-books")}`} to="/user/issued-books"><i className='fa-solid fa-receipt me-1'></i>Issued Books</Link>
+                        </li>
+
+                        <li className='nav-item dropdown'>
+                            <button className='nav-link dropdown-toggle d-flex align-items-center gap-1' data-bs-toggle='dropdown'>
+                                <i className='fa-solid fa-circle-user me-1'></i> My Account
+                            </button>
+                            <ul className='dropdown-menu dropdown-menu-end'>
+                                <li>
+                                    <Link className="dropdown-item" to="/user/profile"><i className='fa-solid fa-id-badge me-1'></i>Profile</Link>
+                                </li>
+
+                                <li>
+                                    <Link className="dropdown-item" to="/user/change_password"><i className='fa-solid fa-key me-1'></i>Change Password</Link>
+                                </li>
+
+                                <hr className="dropdown-divider" />
+
+                                <li>
+                                    <button onClick={handleStudentLogout} type='button' className="dropdown-item text-danger">
+                                        <i className='fa-solid fa-right-from-bracket me-1'></i> Logout
+                                    </button>
+                                </li>
+                            </ul>
                         </li>
                         </>
                     )}
