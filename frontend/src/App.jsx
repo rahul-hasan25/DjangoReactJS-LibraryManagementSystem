@@ -14,6 +14,7 @@ import ManageBooks from './pages/ManageBooks'
 import AdminChangePassword from './pages/AdminChangePassword'
 import UserSignup from './pages/UserSignup'
 import UserLogin from './pages/UserLogin'
+import StudentDashboard from './pages/StudentDashboard'
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
         <Route path='/admin/change_password' element={<AdminChangePassword/>} />
         <Route path='/user/signup' element={<UserSignup/>} />
         <Route path='/user/login' element={<UserLogin/>} />
+        <Route path='/user/dashboard' element={<StudentDashboard/>} />
       </Routes>
     </>
   )

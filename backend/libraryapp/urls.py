@@ -26,4 +26,6 @@ urlpatterns = [
     path('api/user_signup/', user_signup),
     #User Login
     path('api/user_login/', user_login),
+    #Student Navbar
+    path('api/user_stats/', user_stats),
 ]
