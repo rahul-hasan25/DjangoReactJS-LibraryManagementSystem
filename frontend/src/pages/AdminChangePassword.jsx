@@ -58,7 +58,11 @@ const AdminChangePassword = () => {
         }
         catch(err) {
             console.error(err);
-            toast.error("Something went wrong");
+            if(err.response && err.response.data && err.response.data.message) {
+                toast.error(err.response.data.message);
+            } else {
+                toast.error('Something went wrong!');
+            }
         }
 
         finally {

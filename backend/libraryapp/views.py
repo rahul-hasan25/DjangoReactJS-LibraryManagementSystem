@@ -7,6 +7,7 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 
 @api_view(['GET','POST'])
@@ -317,4 +318,70 @@ def admin_change_password(request):
             "message" : "Changed Password Successfully!"
         },
         status=status.HTTP_200_OK
+    )
+    
+    
+
+#USER Signup
+@api_view(['POST'])
+def user_signup(request):
+    full_name        = request.data.get('full_name')
+    mobile           = request.data.get('mobile')
+    email            = request.data.get('email')
+    password         = request.data.get('password')
+    confirm_password = request.data.get('confirm_password')
+    
+    if password != confirm_password:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Password and Confirm Password do not match!'
+            },
+            status= status.HTTP_400_BAD_REQUEST
+        )
+    
+    if len(password) < 6:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Password must be at least 6 characters long!'
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    last_student = Student.objects.all().order_by('-id').first()
+    if last_student and last_student.student_id.isdigit():
+        new_id_int = int(last_student.student_id) + 1
+    else:
+        new_id_int = 1001
+        
+    student_id = str(new_id_int)
+    
+    if Student.objects.filter(email=email).exists():
+        return Response(
+            {
+                'success' : False,
+                'message' : 'User with this email already exists. Please use a different email'
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    hashed_password = make_password(password)
+    
+    student = Student.objects.create(
+        student_id = student_id,
+        full_name  = full_name,
+        mobile     = mobile,
+        email      = email,
+        password   = hashed_password,
+        is_active  = True
+    )
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'User registered successfully!',
+            'student_id' : student.student_id,
+            'full_name' : student.full_name
+        },
+        status=status.HTTP_201_CREATED
     )

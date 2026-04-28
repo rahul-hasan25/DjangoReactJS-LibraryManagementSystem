@@ -7,6 +7,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const handleLogout = ()=> {
+        localStorage.removeItem('adminUser');
         navigate('/admin/login')
     }
 
@@ -120,7 +121,7 @@ const Header = () => {
                         </li>
 
                         <li className="nav-item">
-                            <button className="btn btn-outline-danger btn-sm" to="/admin/dashboard" onClick={handleLogout}><i className='fa-solid fa-right-from-bracket me-1'></i>Logout</button>
+                            <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}><i className='fa-solid fa-right-from-bracket me-1'></i>Logout</button>
                         </li>
                         </>
                     )}
