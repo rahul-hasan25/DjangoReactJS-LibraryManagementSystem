@@ -15,6 +15,7 @@ import AdminChangePassword from './pages/AdminChangePassword'
 import UserSignup from './pages/UserSignup'
 import UserLogin from './pages/UserLogin'
 import StudentDashboard from './pages/StudentDashboard'
+import StudentBooks from './pages/StudentBooks'
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
         <Route path='/user/signup' element={<UserSignup/>} />
         <Route path='/user/login' element={<UserLogin/>} />
         <Route path='/user/dashboard' element={<StudentDashboard/>} />
+        <Route path='/user/books' element={<StudentBooks/>} />
       </Routes>
     </>
   )

@@ -51,7 +51,7 @@ class Book(TimeStampedModel):
     
 
 class IssuedBook(TimeStampedModel):
-    book        = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book        = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='issued_records')
     student     = models.ForeignKey(Student, on_delete=models.CASCADE)
     issued_at   = models.DateTimeField(auto_now_add=True)
     returned_at = models.DateTimeField(blank=True, null=True)

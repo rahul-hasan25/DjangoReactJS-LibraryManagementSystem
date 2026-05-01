@@ -38,7 +38,7 @@ const StudentDashboard = () => {
             }
         };
         fetchStats();
-    }, [])
+    }, []);
   return (
     <div className="py-5" style={{background:'linear-gradient(135deg, #f3f4ff, #fdfbff)', minHeight:'100vh'}}>
         <div className='container'>
@@ -74,7 +74,7 @@ const StudentDashboard = () => {
                                     </div>
 
                                     <div className='rounded-circle d-inline-flex align-items-center justify-content-center' style={{height:'42px', width:'42px', background:'#e0e7ff'}}>
-                                        <i className='fa-solid fa-layer-group text-primary'></i>
+                                        <div class="icon-circle bg-light">📚</div>
                                     </div>
                                 </div>
 
@@ -99,7 +99,7 @@ const StudentDashboard = () => {
                                     </div>
 
                                     <div className='rounded-circle d-inline-flex align-items-center justify-content-center' style={{height:'42px', width:'42px', background:'#e0e7ff'}}>
-                                        <i className='fa-solid fa-layer-group text-primary'></i>
+                                        <div class="icon-circle bg-white text-dark">⏱</div>
                                     </div>
                                 </div>
 
@@ -118,7 +118,7 @@ const StudentDashboard = () => {
                                     </div>
 
                                     <div className='rounded-circle d-inline-flex align-items-center justify-content-center' style={{height:'42px', width:'42px', background:'#e0e7ff'}}>
-                                        <i className='fa-solid fa-layer-group text-primary'></i>
+                                        <div class="icon-circle bg-light">📗</div>
                                     </div>
                                 </div>
 
@@ -128,6 +128,23 @@ const StudentDashboard = () => {
                                     <Link to="/user/books" className="small text-primary text-decoration-none">
                                         View issue history <i className='fa-solid fa-arrow-right'></i>
                                     </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='col-md-12'>
+                        <div className='card border-0 shadow-sm h-100'>
+                            <div className='card-body d-flex flex-column'>
+                                <div className='d-flex justify-content-between align-items-center mb-0'>
+                                    <div>
+                                        <strong>💡 Tip</strong>
+                                        <p class="mb-0 text-muted">
+                                            Regularly check your pending returns to avoid late fines and keep your library account in good standing.
+                                        </p>
+                                    </div>
+
+                                    <Link to="/user/issued-books" class="btn btn-outline-primary">Go to issued books</Link>
                                 </div>
                             </div>
                         </div>

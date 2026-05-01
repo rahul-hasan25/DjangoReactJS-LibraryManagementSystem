@@ -472,3 +472,11 @@ def user_stats(request):
         },
         status=status.HTTP_200_OK
     )
+
+
+
+@api_view(['GET'])
+def user_list_book(request):
+    books = Book.objects.select_related('author', 'category').prefetch_related('issued_records').all().order_by('title')
+    serializer = BookListSerializer(books, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

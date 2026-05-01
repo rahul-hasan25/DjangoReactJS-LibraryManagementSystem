@@ -20,3 +20,17 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Book
         fields = ['id', 'title', 'author', 'author_name', 'category', 'category_name', 'isbn', 'price', 'cover_image', 'is_issued', 'quantity', 'created_at', 'updated_at']
+        
+
+class BookListSerializer(serializers.ModelSerializer):
+    author_name   = serializers.CharField(source='author.name', read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    available_quantity = serializers.SerializerMethodField()
+    class Meta:
+        model  = Book
+        fields = ['id', 'title', 'author', 'author_name', 'category', 'category_name', 'isbn', 'price', 'cover_image', 'is_issued', 'quantity', 'created_at', 'updated_at', 'available_quantity']
+        
+    def get_available_quantity(self, obj):
+        issued_count = obj.issued_records.filter(is_returned=False).count()
+        available    = obj.quantity - issued_count
+        return available if available>=0 else 0
