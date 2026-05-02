@@ -480,3 +480,29 @@ def user_list_book(request):
     books = Book.objects.select_related('author', 'category').prefetch_related('issued_records').all().order_by('title')
     serializer = BookListSerializer(books, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['GET', 'PUT'])
+def user_profile(request):
+    student_id = request.query_params.get('student_id') or request.data.get('student_id')
+    
+    try :
+        student = Student.objects.get(student_id=student_id)
+    except Student.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Student not found!'
+            }, status=status.HTTP_404_NOT_FOUND
+        )
+    
+    if request.method == 'GET':
+        serializer = StudentSerializer(student)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        serializer = StudentSerializer(student, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

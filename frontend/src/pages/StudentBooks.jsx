@@ -46,10 +46,20 @@ const StudentBooks = () => {
         }
 
         const filteredBooks = books.filter(book => 
-            book.title.toLowerCase().includes(term) || book.author.toLowerCase().includes(term) || book.isbn.toLowerCase().includes(term)
+            book.title.toLowerCase().includes(term) || book.author_name.toLowerCase().includes(term) || book.isbn.toLowerCase().includes(term)
         );
         setFiltered(filteredBooks);
     },[search,books]);
+
+    const getCoverUrl = (book) => {
+        if(!book.cover_image){
+            return null;
+        }
+        if(book.cover_image.startsWith('http')){
+            return book.cover_image;
+        }
+        return `http://127.0.0.1:8000${book.cover_image}`;
+    }
   return (
     <div className="py-5" style={{background:'linear-gradient(135deg, #f3f4ff, #fdfbff)', minHeight:'100vh'}}>
         <div className='container'>
@@ -90,8 +100,19 @@ const StudentBooks = () => {
             {!loading && filtered.length > 0 && (
                 <div className='row g-4'>
                     {filtered.map((book) => (
-                        <div className='col-md-4'>
+                        <div className='col-md-4' key={book.id ?? book.isbn}>
                             <div className='card border-0 shadow-sm h-100 rounded-4'>
+                                <div className='bg-light d-flex align-items-center justify-content-center' style={{height:'200px'}}>
+                                    {getCoverUrl(book) ? (
+                                        <img src={getCoverUrl(book)} alt={book.title} style={{maxHeight:'180px', objectFit:'contain'}} />
+                                    ) : (
+                                        <div className='text-muted text-center'>
+                                            <i className='fa-solid fa-book text-muted'></i>
+                                            <div className='small'>No Cover</div>
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className='card-body d-flex flex-column'>
                                     <h6 className='mb-1 text-truncate'>{book.title}</h6>
 

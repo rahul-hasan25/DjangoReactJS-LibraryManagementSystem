@@ -29,4 +29,5 @@ urlpatterns = [
     #Student Navbar
     path('api/user_stats/', user_stats),
     path('api/user/books/', user_list_book),
+    path('api/user/profile/', user_profile),
 ]
