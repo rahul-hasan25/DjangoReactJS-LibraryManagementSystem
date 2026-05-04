@@ -30,4 +30,5 @@ urlpatterns = [
     path('api/user_stats/', user_stats),
     path('api/user/books/', user_list_book),
     path('api/user/profile/', user_profile),
+    path('api/user/change_password/', user_change_password),
 ]

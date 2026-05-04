@@ -506,3 +506,57 @@ def user_profile(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+def user_change_password(request):
+    student_id       = request.data.get('student_id')
+    current_password = request.data.get('current_password')
+    new_password     = request.data.get('new_password')
+    confirm_password = request.data.get('confirm_password')
+    
+    if new_password != confirm_password:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'New Password and Confirm Password do not match!'
+            }, status=status.HTTP_400_BAD_REQUEST
+        )
+        
+    if len(new_password) < 6:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'New Password must be at least six characters long!'
+            }, status=status.HTTP_400_BAD_REQUEST
+        )
+        
+    try:
+        student = Student.objects.get(student_id=student_id)
+    except Student.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Student does not exist!'
+            }, status=status.HTTP_404_NOT_FOUND
+        )
+    
+    if not check_password(current_password, student.password):
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Current Password is incorrect!'
+            }, status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    hashed_new_password = make_password(new_password)
+    student.password = hashed_new_password
+    student.save()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Password Updated Successfully!'
+        }, status=status.HTTP_200_OK
+    )
