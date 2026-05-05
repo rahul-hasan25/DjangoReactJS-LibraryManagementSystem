@@ -56,8 +56,8 @@ const ManageStudents = () => {
     <div className="py-5" style={{background:'linear-gradient(135deg, #f3f4ff, #fdfbff)', minHeight:'100vh'}}>
         <div className='container'>
             <div className='row mb-4'>
-                <div className='col-md-8 mx-auto d-flex justify-content-between align-items-center'>
-                    <div className='mb-4 text-center'>
+                <div className='mx-auto d-flex justify-content-between align-items-center'>
+                    <div className='mb-4'>
                         <h4 className='fw-semibold mb-1'>
                             <i className='fa-solid fa-layer-group text-primary'></i> Manage Students
                         </h4>

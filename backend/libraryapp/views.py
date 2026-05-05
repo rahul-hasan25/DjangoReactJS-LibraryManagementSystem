@@ -568,7 +568,7 @@ def user_change_password(request):
 # <----- Students ------->
 @api_view(['GET'])
 def list_registered_students(request):
-    students = Student.objects.all().order_by('-id')
+    students = Student.objects.all()
     serializer = StudentSerializer(students, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -600,4 +600,111 @@ def activate_student(request, id):
             'message' : 'Student has been Activated!',
             'student' : StudentSerializer(student).data
         }, status=status.HTTP_200_OK
+    )
+    
+
+# <----- Issue Book ----->
+@api_view(['GET'])
+def get_student_by_student_id(request):
+    student_id = request.query_params.get('student_id') or request.data.get('student_id')
+    
+    try:
+        student = Student.objects.get(student_id=student_id)
+        serializer = StudentSerializer(student)
+        return Response(
+            {
+                'success' : True,
+                'student' : serializer.data
+            }, status=status.HTTP_200_OK
+        )
+    except Student.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Student not found!'
+            }, status=status.HTTP_404_NOT_FOUND
+        )
+        
+
+@api_view(['GET'])
+def lookup_book_for_issue(request):
+    query = request.query_params.get('q')
+    
+    try:
+        book = Book.objects.get(isbn__iexact=query)
+    except Book.DoesNotExist:
+        book = Book.objects.filter(title__icontains=query).first()
+        if not book:
+            return Response(
+                {
+                    'success' : False,
+                    'message' : 'Book not found!'
+                }, status=status.HTTP_404_NOT_FOUND
+            )
+    
+    serializer = BookSerializer(book)
+    return Response(
+        {
+            'success' : True,
+            'book' : serializer.data
+        }, status=status.HTTP_200_OK
+    )
+
+
+
+@api_view(['POST'])
+def issue_book(request):
+    student_id = request.data.get('student_id')
+    book_id    = request.data.get('book_id')
+    remark     = request.data.get('remark', "")
+    
+    # Fetch Students
+    try:
+        student = Student.objects.get(student_id=student_id)
+    except Student.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Student not found!'
+            }, status=status.HTTP_404_NOT_FOUND
+        )
+    
+    # Fetch Book
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Book not found!'
+            }, status=status.HTTP_404_NOT_FOUND
+        )
+    
+    
+    if book.quantity <= 0:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'No copies of the book are currently available for issue'
+            }, status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    issued_book = IssuedBook.objects.create(
+        student=student,
+        book=book,
+        remark=remark,
+        fine=0,
+        is_returned = False
+    )
+    
+    book.quantity -= 1
+    book.is_issued = True
+    book.save()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Book issued successfully!',
+            'issued_book_id' : issued_book.id
+        }, status=status.HTTP_201_CREATED
     )
