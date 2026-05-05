@@ -18,6 +18,7 @@ import StudentDashboard from './pages/StudentDashboard'
 import StudentBooks from './pages/StudentBooks'
 import StudentProfile from './pages/StudentProfile'
 import StudentChangePassword from './pages/StudentChangePassword'
+import ManageStudents from './pages/ManageStudents'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
         <Route path='/user/books' element={<StudentBooks/>} />
         <Route path='/user/profile' element={<StudentProfile/>} />
         <Route path='/user/change_password' element={<StudentChangePassword/>} />
+        <Route path='/admin/manage_students' element={<ManageStudents/>}/>
       </Routes>
     </>
   )

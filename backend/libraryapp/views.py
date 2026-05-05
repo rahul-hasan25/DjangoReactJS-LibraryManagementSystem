@@ -560,3 +560,44 @@ def user_change_password(request):
             'message' : 'Password Updated Successfully!'
         }, status=status.HTTP_200_OK
     )
+
+
+
+
+# ADMIN Navbar
+# <----- Students ------->
+@api_view(['GET'])
+def list_registered_students(request):
+    students = Student.objects.all().order_by('-id')
+    serializer = StudentSerializer(students, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST', 'PUT'])
+def block_student(request, id):
+    student = get_object_or_404(Student, id=id)
+    student.is_active = False
+    student.save()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Student has been blocked!',
+            'student' : StudentSerializer(student).data
+        }, status=status.HTTP_200_OK
+    )
+
+
+@api_view(['POST', 'PUT'])
+def activate_student(request, id):
+    student = get_object_or_404(Student, id=id)
+    student.is_active = True
+    student.save()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Student has been Activated!',
+            'student' : StudentSerializer(student).data
+        }, status=status.HTTP_200_OK
+    )

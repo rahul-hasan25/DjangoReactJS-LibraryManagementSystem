@@ -31,4 +31,9 @@ urlpatterns = [
     path('api/user/books/', user_list_book),
     path('api/user/profile/', user_profile),
     path('api/user/change_password/', user_change_password),
+    #ADMIN Navbar
+    #Students
+    path('api/admin/students/', list_registered_students),
+    path('api/admin/block_student/<int:id>/', block_student),
+    path('api/admin/activate_student/<int:id>/', activate_student),
 ]
