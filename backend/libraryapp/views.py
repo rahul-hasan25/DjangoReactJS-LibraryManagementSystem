@@ -708,3 +708,11 @@ def issue_book(request):
             'issued_book_id' : issued_book.id
         }, status=status.HTTP_201_CREATED
     )
+    
+
+# <----- Book == Issued Book ----->
+@api_view(['GET'])
+def list_issued_books(request):
+    issued_books = IssuedBook.objects.select_related('student', 'book').all()
+    serializer = IssuedBookSerializer(issued_books, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

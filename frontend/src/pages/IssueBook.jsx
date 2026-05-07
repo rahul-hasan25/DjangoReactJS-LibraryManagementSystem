@@ -114,7 +114,7 @@ const IssueBook = () => {
                         </h4>
                         <p className='text-muted small'>Search Student and Book then issue the Book with a remark.</p>
                     </div>
-                    <button onClick={()=>navigate("/admin/issued-books")} className='btn btn-outline-primary btn-sm'><i className='fa-solid fa-plus'></i> Manage Issued Books</button>
+                    <button onClick={()=>navigate("/admin/manage-issued-books")} className='btn btn-outline-primary btn-sm'><i className='fa-solid fa-plus'></i> Manage Issued Books</button>
                 </div>
             </div>
 

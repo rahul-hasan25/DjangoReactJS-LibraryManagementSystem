@@ -109,7 +109,7 @@ const Header = () => {
                                 </li>
 
                                 <li>
-                                    <Link className="dropdown-item" to="/admin/category_add"><i className='fa-solid fa-arrow-right-arrow-left me-1'></i>Issued Book</Link>
+                                    <Link className="dropdown-item" to="/admin/manage-issued-books"><i className='fa-solid fa-arrow-right-arrow-left me-1'></i>Issued Book</Link>
                                 </li>
                             </ul>
                         </li>

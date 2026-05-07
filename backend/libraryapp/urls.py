@@ -40,4 +40,6 @@ urlpatterns = [
     path('api/students/by-id/', get_student_by_student_id),
     path('api/books/lookup/', lookup_book_for_issue),
     path('api/issue_book/', issue_book),
+    #Books
+    path('api/admin/issued-books/', list_issued_books),
 ]
