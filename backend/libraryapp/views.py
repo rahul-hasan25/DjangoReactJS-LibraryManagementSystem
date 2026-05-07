@@ -9,6 +9,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
+from django.utils import timezone
 
 
 @api_view(['GET','POST'])
@@ -716,3 +717,51 @@ def list_issued_books(request):
     issued_books = IssuedBook.objects.select_related('student', 'book').all()
     serializer = IssuedBookSerializer(issued_books, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+# Return Book Detals 
+@api_view(['GET'])
+def get_issued_book_details(request, id):
+    issued_books = get_object_or_404(IssuedBook, id=id)
+    serializer   = IssuedBookSerializer(issued_books)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def return_book(request,id):
+    issued_books = get_object_or_404(IssuedBook, id=id)
+    if issued_books.is_returned:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'This book has already been returned!'
+            }, status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    fine = request.data.get('fine', 0)
+    try:
+        fine = int(fine)
+    except (ValueError, TypeError):
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Invalid fine value'
+            }, status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    issued_books.is_returned = True
+    issued_books.fine = fine
+    issued_books.returned_at = timezone.now()
+    issued_books.save()
+    
+    book = issued_books.book
+    book.quantity += 1
+    book.is_issued = book.issued_records.filter(is_returned=False).exists()
+    book.save()
+    
+    return Response(
+        {
+            'success' : True,
+            'message' : 'Book returned successfully!'
+        }, status=status.HTTP_200_OK
+    )

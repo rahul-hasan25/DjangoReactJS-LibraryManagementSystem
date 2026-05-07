@@ -42,4 +42,6 @@ urlpatterns = [
     path('api/issue_book/', issue_book),
     #Books
     path('api/admin/issued-books/', list_issued_books),
+    path('api/issued-books/<int:id>/', get_issued_book_details),
+    path('api/return_book/<int:id>/', return_book),
 ]

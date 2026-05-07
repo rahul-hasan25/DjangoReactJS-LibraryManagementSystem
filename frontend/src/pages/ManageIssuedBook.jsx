@@ -83,7 +83,7 @@ const ManageIssuedBook = () => {
                                                 {issue.is_returned ? (new Date(issue.returned_at).toLocaleDateString()) : (<span className='badge bg-danger'>Not Returned</span>)}
                                             </td>
                                             <td>
-                                                <button onClick={()=>navigate(`/admin/issued-books/${issue.id}`)} className='btn btn-sm btn-outline-info'>
+                                                <button onClick={()=>navigate(`/admin/issued_books/${issue.id}`)} className='btn btn-sm btn-outline-info'>
                                                     <i className='fa-solid fa-pen-to-square me-1'></i> Return Details
                                                 </button>
                                             </td>
