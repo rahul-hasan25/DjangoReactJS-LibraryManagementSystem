@@ -44,4 +44,6 @@ urlpatterns = [
     path('api/admin/issued-books/', list_issued_books),
     path('api/issued-books/<int:id>/', get_issued_book_details),
     path('api/return_book/<int:id>/', return_book),
+    # Admin Student Page ---> Details Button
+    path('api/admin/student-history/<int:student_id>/', student_issue_history),
 ]

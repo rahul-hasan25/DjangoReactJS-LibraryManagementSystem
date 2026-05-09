@@ -114,6 +114,8 @@ const ManageStudents = () => {
                                                 <button onClick={()=>handleToggleStatus(student)} className={student.is_active ? 'btn btn-sm btn-outline-danger me-2' : 'btn btn-sm btn-outline-success me-2'}>
                                                     {student.is_active ? 'Block' : 'Activate'}
                                                 </button>
+
+                                                <button onClick={()=>navigate(`/admin/students/${student.student_id}/history`)} className='btn btn-sm btn-outline-success'>Details</button>
                                             </td>
                                         </tr>
                                     ))}

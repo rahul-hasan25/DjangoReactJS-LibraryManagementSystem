@@ -765,3 +765,21 @@ def return_book(request,id):
             'message' : 'Book returned successfully!'
         }, status=status.HTTP_200_OK
     )
+    
+
+
+# Admin Student Page ---> Details Button
+@api_view(['GET'])
+def student_issue_history(request, student_id):
+    student      = get_object_or_404(Student, student_id=student_id)
+    issued_books = IssuedBook.objects.filter(student=student).select_related('student', 'book')
+    
+    issues_serializer  = IssuedBookSerializer(issued_books, many=True)
+    student_serializer = StudentSerializer(student)
+    
+    return Response(
+        {
+            'student' : student_serializer.data,
+            'issues'  : issues_serializer.data
+        }, status=status.HTTP_200_OK
+    )
