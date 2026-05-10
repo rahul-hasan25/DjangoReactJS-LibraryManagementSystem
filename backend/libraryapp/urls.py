@@ -46,4 +46,6 @@ urlpatterns = [
     path('api/return_book/<int:id>/', return_book),
     # Admin Student Page ---> Details Button
     path('api/admin/student-history/<int:student_id>/', student_issue_history),
+    #ADMIN Dashboard
+    path('api/admin/stats/', admin_dashboard_stats),
 ]

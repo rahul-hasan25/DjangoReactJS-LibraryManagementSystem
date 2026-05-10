@@ -63,7 +63,7 @@ const ManageStudents = () => {
                         </h4>
                         <p className='text-muted small'>View all registered Students and Block or Activate Students.</p>
                     </div>
-                    <button onClick={()=>navigate("/admin/issued-books")} className='btn btn-outline-primary btn-sm'><i className='fa-solid fa-plus'></i> Issued Books</button>
+                    <button onClick={()=>navigate("/admin/issued-books")} className='btn btn-outline-primary btn-sm'><i className='fa-solid fa-plus'></i> Issue Book</button>
                 </div>
             </div>
 

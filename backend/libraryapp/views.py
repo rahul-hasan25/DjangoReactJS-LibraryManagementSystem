@@ -783,3 +783,39 @@ def student_issue_history(request, student_id):
             'issues'  : issues_serializer.data
         }, status=status.HTTP_200_OK
     )
+    
+
+
+
+#ADMIN Dashboard
+@api_view(['GET'])
+def admin_dashboard_stats(request):
+    total_students   = Student.objects.all().count()
+    active_students  = Student.objects.filter(is_active=True).count()
+    blocked_students = Student.objects.filter(is_active=False).count()
+    
+    total_books     = Book.objects.count()
+    available_books = Book.objects.filter(quantity__gt=0).count()
+    
+    out_of_stock_books = Book.objects.filter(quantity__lt=0).count()
+    total_issued       = IssuedBook.objects.count()
+    total_categories   = Category.objects.count()
+    total_authors      = Author.objects.count()
+    currently_issued   = IssuedBook.objects.filter(is_returned=False).count()
+    returned_count     = IssuedBook.objects.filter(is_returned=True).count()
+    
+    data = {
+        'total_students'     : total_students,
+        'active_students'    : active_students,
+        'blocked_students'   : blocked_students,
+        'total_books'        : total_books,
+        'available_books'    : available_books,
+        'out_of_stock_books' : out_of_stock_books,
+        'total_issued'       : total_issued,
+        'total_categories'   : total_categories,
+        'total_authors'      : total_authors,
+        'currently_issued'   : currently_issued,
+        'returned_count'     : returned_count
+    }
+    
+    return Response(data, status=status.HTTP_200_OK)
