@@ -125,7 +125,7 @@ const StudentDashboard = () => {
                                 <p className='mb-0 text-muted small'>Count of all books ever issued on your student account.</p>
 
                                 <div className='mt-3'>
-                                    <Link to="/user/books" className="small text-primary text-decoration-none">
+                                    <Link to="/user/issued-books" className="small text-primary text-decoration-none">
                                         View issue history <i className='fa-solid fa-arrow-right'></i>
                                     </Link>
                                 </div>

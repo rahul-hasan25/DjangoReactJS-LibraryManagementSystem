@@ -819,3 +819,25 @@ def admin_dashboard_stats(request):
     }
     
     return Response(data, status=status.HTTP_200_OK)
+
+
+
+# Student----> Issued Books
+@api_view(['GET'])
+def user_issued_books(request):
+    student_id = request.query_params.get('student_id')
+    
+    try:
+        student = Student.objects.get(student_id=student_id)
+    except Student.DoesNotExist:
+        return Response(
+            {
+                'success' : False,
+                'message' : 'Student not found!'
+            }, status=status.HTTP_404_NOT_FOUND
+        )
+        
+    issued_books = IssuedBook.objects.filter(student=student).select_related('book', 'student')
+    serializer = IssuedBookSerializer(issued_books, many=True)
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)

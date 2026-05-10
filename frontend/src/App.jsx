@@ -23,6 +23,7 @@ import IssueBook from './pages/IssueBook'
 import ManageIssuedBook from './pages/ManageIssuedBook'
 import IssuedBookDetails from './pages/IssuedBookDetails'
 import StudentHistory from './pages/StudentHistory'
+import StudentIssuedBooks from './pages/StudentIssuedBooks'
 
 function App() {
 
@@ -51,6 +52,7 @@ function App() {
         <Route path='/admin/manage-issued-books' element={<ManageIssuedBook/>} />
         <Route path='/admin/issued_books/:id' element={<IssuedBookDetails/>} />
         <Route path='/admin/students/:studentId/history' element={<StudentHistory/>} />
+        <Route path='/user/issued-books' element={<StudentIssuedBooks/>} />
       </Routes>
     </>
   )

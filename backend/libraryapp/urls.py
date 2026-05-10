@@ -48,4 +48,6 @@ urlpatterns = [
     path('api/admin/student-history/<int:student_id>/', student_issue_history),
     #ADMIN Dashboard
     path('api/admin/stats/', admin_dashboard_stats),
+    # Student----> Issued Books
+    path('api/user_issued_books/', user_issued_books),
 ]
