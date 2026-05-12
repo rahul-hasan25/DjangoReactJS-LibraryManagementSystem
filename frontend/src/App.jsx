@@ -24,6 +24,7 @@ import ManageIssuedBook from './pages/ManageIssuedBook'
 import IssuedBookDetails from './pages/IssuedBookDetails'
 import StudentHistory from './pages/StudentHistory'
 import StudentIssuedBooks from './pages/StudentIssuedBooks'
+import Home from './components/Home'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
       <Header />
       <ToastContainer position='top-right' autoClose={2000} />
       <Routes>
+        <Route path='/' element={<Home/>} />
         <Route path='/admin/login' element={<AdminLogin/>} />
         <Route path='/admin/dashboard' element={<AdminDashboard />} />
         <Route path='/admin/category_add' element={<AddCategory />} />
